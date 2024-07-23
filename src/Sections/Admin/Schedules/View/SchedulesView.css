@@ -11,30 +11,30 @@
  margin-bottom: 20px;
 }
 
-.schedules-table {
+.schedules-table-schedules-view {
  width: 90%;
  border-collapse: collapse;
  margin-bottom: 20px;
 }
 
-.schedules-table th,
-.schedules-table td {
+.schedules-table-schedules-view th,
+.schedules-table-schedules-view td {
  border: 1px solid #ddd;
  padding: 8px;
  text-align: center;
 }
 
-.schedules-table th {
+.schedules-table-schedules-view th {
  background-color: #f2f2f2;
 }
 
-.pagination {
+.pagination-schedules-view {
  display: flex;
  justify-content: center;
  margin-top: 20px;
 }
 
-.page-button {
+.page-button-schedules-view {
  background-color: #136472;
  color: white;
  border: none;
@@ -44,58 +44,85 @@
  border-radius: 5px;
 }
 
-.page-button.active {
+.page-button-schedules-view.active {
  background-color: #0e4a57;
 }
 
-.page-button:hover {
+.page-button-schedules-view:hover {
  background-color: #0e4a57;
 }
 
-.modal2 {
- position: fixed;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- background-color: rgba(0, 0, 0, 0.5);
+.modal-schedules-view {
  display: flex;
- justify-content: center;
+ flex-direction: column;
  align-items: center;
-}
-
-
-.modal-content2 {
- background-color: #fff;
  padding: 20px;
+ background-color: #ffffff;
  border-radius: 10px;
- width: 600px;
- text-align: center;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ width: 80%;
+ max-width: 800px;
+ margin: 0 auto;
 }
 
-.alumnos-table {
- width: 100%;
- border-collapse: collapse;
+.modal-schedules-view h2 {
  margin-bottom: 20px;
 }
 
-.alumnos-table th,
-.alumnos-table td {
+.modal-schedules-view form {
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+}
+
+.modal-schedules-view form label {
+ display: flex;
+ flex-direction: column;
+ margin-bottom: 15px;
+}
+
+.modal-schedules-view form input {
+ padding: 10px;
  border: 1px solid #ddd;
- padding: 8px;
- text-align: center;
+ border-radius: 5px;
+ width: 100%;
+ box-sizing: border-box;
 }
 
-.alumnos-table th {
- background-color: #f2f2f2;
+.modal-schedules-view form div {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
 }
 
-.add-button {
- background-color: #5cb85c;
+.modal-schedules-view form div label {
+ width: 48%;
+}
+
+.modal-schedules-view button {
+ background-color: #136472;
  color: white;
+ border: none;
+ padding: 10px;
+ margin-top: 20px;
+ cursor: pointer;
+ border-radius: 5px;
+}
+
+.modal-schedules-view button:hover {
+ background-color: #0e4a57;
+}
+
+.modal-schedules-view .close-button-schedules-view {
+ background-color: #ccc;
+ color: #333;
  border: none;
  padding: 10px;
  cursor: pointer;
  border-radius: 5px;
- margin-top: 20px;
+ margin-top: 10px;
+}
+
+.modal-schedules-view .close-button-schedules-view:hover {
+ background-color: #bbb;
 }

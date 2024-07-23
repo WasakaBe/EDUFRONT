@@ -7,6 +7,12 @@ import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
 
+interface DiaHorario {
+  day: string;
+  startTime: string;
+  endTime: string;
+}
+
 interface Horario {
   id_horario: number;
   nombre_asignatura: string;
@@ -15,14 +21,46 @@ interface Horario {
   nombre_grupo: string;
   nombre_carrera_tecnica: string;
   ciclo_escolar: string;
-  dias_horarios: { day: string; startTime: string; endTime: string }[] | null;
+  dias_horarios: DiaHorario[] | null;
+}
+
+interface Asignatura {
+  id_asignatura: number;
+  nombre_asignatura: string;
+}
+
+interface Docente {
+  id_docentes: number;
+  nombre_docentes: string;
+  app_docentes: string;
+  apm_docentes: string;
+}
+
+interface Grado {
+  id_grado: number;
+  nombre_grado: string;
+}
+
+interface Grupo {
+  id_grupos: number;
+  nombre_grupos: string;
+}
+
+interface CarreraTecnica {
+  id_carrera_tecnica: number;
+  nombre_carrera_tecnica: string;
 }
 
 const SchedulesView: React.FC = () => {
   const [horarios, setHorarios] = useState<Horario[]>([]);
+  const [asignaturas, setAsignaturas] = useState<Asignatura[]>([]);
+  const [docentes, setDocentes] = useState<Docente[]>([]);
+  const [grados, setGrados] = useState<Grado[]>([]);
+  const [grupos, setGrupos] = useState<Grupo[]>([]);
+  const [carrerasTecnicas, setCarrerasTecnicas] = useState<CarreraTecnica[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedHorario, setSelectedHorario] = useState<Horario | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const itemsPerPage = 4;
 
@@ -37,6 +75,61 @@ const SchedulesView: React.FC = () => {
         }
       })
       .catch(error => toast.error(`Error fetching data: ${error.message}`));
+
+    fetch(`${apiUrl}asignatura`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.asignaturas) {
+          setAsignaturas(data.asignaturas);
+        } else {
+          toast.error('Error fetching subjects: Data is not an array');
+        }
+      })
+      .catch(error => toast.error(`Error fetching subjects: ${error.message}`));
+
+    fetch(`${apiUrl}docente`)
+      .then(response => response.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setDocentes(data);
+        } else {
+          toast.error('Error fetching teachers: Data is not an array');
+        }
+      })
+      .catch(error => toast.error(`Error fetching teachers: ${error.message}`));
+
+    fetch(`${apiUrl}grado`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && Array.isArray(data)) {
+          setGrados(data);
+        } else {
+          toast.error('Error fetching grades: Data is not an array');
+        }
+      })
+      .catch(error => toast.error(`Error fetching grades: ${error.message}`));
+
+    fetch(`${apiUrl}grupo`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && Array.isArray(data)) {
+          setGrupos(data);
+        } else {
+          toast.error('Error fetching groups: Data is not an array');
+        }
+      })
+      .catch(error => toast.error(`Error fetching groups: ${error.message}`));
+
+    fetch(`${apiUrl}carreras/tecnicas`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.carreras) {
+          setCarrerasTecnicas(data.carreras);
+        } else {
+          toast.error('Error fetching technical careers: Data is not an array');
+        }
+      })
+      .catch(error => toast.error(`Error fetching technical careers: ${error.message}`));
   }, []);
 
   const handlePageChange = (pageNumber: number) => {
@@ -49,8 +142,63 @@ const SchedulesView: React.FC = () => {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
     setSelectedHorario(null);
+    setIsModalOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (selectedHorario) {
+      const { name, value } = e.target;
+      setSelectedHorario({ ...selectedHorario, [name]: value });
+    }
+  };
+
+  const handleDiaHorarioChange = (index: number, field: string, value: string) => {
+    if (selectedHorario) {
+      const updatedDiasHorarios = selectedHorario.dias_horarios ? [...selectedHorario.dias_horarios] : [];
+      if (updatedDiasHorarios[index]) {
+        updatedDiasHorarios[index][field as keyof DiaHorario] = value;
+      } else {
+        updatedDiasHorarios[index] = { day: '', startTime: '', endTime: '' };
+        updatedDiasHorarios[index][field as keyof DiaHorario] = value;
+      }
+      setSelectedHorario({ ...selectedHorario, dias_horarios: updatedDiasHorarios });
+    }
+  };
+
+  const handleSubmit = () => {
+    if (selectedHorario) {
+      const updatedHorario = {
+        ...selectedHorario,
+        id_asignatura: asignaturas.find(a => a.nombre_asignatura === selectedHorario.nombre_asignatura)?.id_asignatura,
+        id_docente: docentes.find(d => `${d.nombre_docentes} ${d.app_docentes} ${d.apm_docentes}` === selectedHorario.nombre_docente)?.id_docentes,
+        id_grado: grados.find(g => g.nombre_grado === selectedHorario.nombre_grado)?.id_grado,
+        id_grupo: grupos.find(g => g.nombre_grupos === selectedHorario.nombre_grupo)?.id_grupos,
+        id_carrera_tecnica: carrerasTecnicas.find(c => c.nombre_carrera_tecnica === selectedHorario.nombre_carrera_tecnica)?.id_carrera_tecnica,
+      };
+
+      fetch(`${apiUrl}horarios_escolares/update/${selectedHorario.id_horario}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedHorario),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error updating schedule');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setHorarios(horarios.map(horario => horario.id_horario === data.id_horario ? data : horario));
+          toast.success('Horario actualizado exitosamente');
+          closeModal();
+        })
+        .catch(error => {
+          toast.error(`Error updating schedule: ${error.message}`);
+        });
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -61,7 +209,7 @@ const SchedulesView: React.FC = () => {
   return (
     <div className="schedules-view-container">
       <h2>Horarios Escolares</h2>
-      <table className="schedules-table">
+      <table className="schedules-table-schedules-view">
         <thead>
           <tr>
             <th>ID</th>
@@ -72,7 +220,7 @@ const SchedulesView: React.FC = () => {
             <th>Carrera Técnica</th>
             <th>Ciclo Escolar</th>
             <th>Días y Horarios</th>
-            <th>Acciones</th>
+            <th>Acción</th>
           </tr>
         </thead>
         <tbody>
@@ -97,23 +245,18 @@ const SchedulesView: React.FC = () => {
                   <span>No se encontraron días y horarios</span>
                 )}
               </td>
-              <td className="align">
-                <button
-                  className="edit-button"
-                  onClick={() => openModal(horario)}
-                >
-                  Actualizar
-                </button>
+              <td>
+                <button className="btn-view" onClick={() => openModal(horario)}>Actualizar</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="pagination">
+      <div className="pagination-schedules-view">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index + 1}
-            className={`page-button ${currentPage === index + 1 ? 'active' : ''}`}
+            className={`page-button-schedules-view ${currentPage === index + 1 ? 'active' : ''}`}
             onClick={() => handlePageChange(index + 1)}
           >
             {index + 1}
@@ -121,55 +264,89 @@ const SchedulesView: React.FC = () => {
         ))}
       </div>
 
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="Actualizar Horario"
-        className="modal-view"
-        overlayClassName="overlay"
-      >
+      <Modal isOpen={isModalOpen} onRequestClose={closeModal} className="modal-schedules-view">
+        <h2>Actualizar Horario</h2>
         {selectedHorario && (
-          <div className="modal-content-view">
-              <span className="close-button-view" onClick={closeModal}>&times;</span>
-            <h2 className="modal-title-view">Actualizar Horario</h2>
-            <form className="modal-body-view">
-              <label className="modal-body-field">
-                Asignatura:
-                <input type="text" defaultValue={selectedHorario.nombre_asignatura} />
-              </label>
-              <label className="modal-body-field">
-                Docente:
-                <input type="text" defaultValue={selectedHorario.nombre_docente} />
-              </label >
-              <label className="modal-body-field">
-                Grado:
-                <input type="text" defaultValue={selectedHorario.nombre_grado} />
-              </label>
-              <label className="modal-body-field">
-                Grupo:
-                <input type="text" defaultValue={selectedHorario.nombre_grupo} />
-              </label>
-              <label className="modal-body-field">
-                Carrera Técnica:
-                <input type="text" defaultValue={selectedHorario.nombre_carrera_tecnica} />
-              </label>
-              <label className="modal-body-field">
-                Ciclo Escolar:
-                <input type="text" defaultValue={selectedHorario.ciclo_escolar} />
-              </label>
-              <label >
-                Días y Horarios:
-                {selectedHorario.dias_horarios && selectedHorario.dias_horarios.map((dia, index) => (
-                  <div key={index}>
-                    <span>{dia.day}: </span>
-                    <input type="text" defaultValue={dia.startTime} /> - <input type="text" defaultValue={dia.endTime} />
-                  </div>
+          <form>
+            <label>
+              Asignatura:
+              <select name="nombre_asignatura" value={selectedHorario.nombre_asignatura} onChange={handleInputChange}>
+                <option value="">Selecciona una asignatura</option>
+                {asignaturas.map(asignatura => (
+                  <option key={asignatura.id_asignatura} value={asignatura.nombre_asignatura}>
+                    {asignatura.nombre_asignatura}
+                  </option>
                 ))}
-              </label>
-              <button type="button" className="save-button"  >Actualizar</button>
-            </form>
-          </div>
+              </select>
+            </label>
+            <label>
+              Docente:
+              <select name="nombre_docente" value={selectedHorario.nombre_docente} onChange={handleInputChange}>
+                <option value="">Selecciona un docente</option>
+                {docentes.map(docente => (
+                  <option key={docente.id_docentes} value={`${docente.nombre_docentes} ${docente.app_docentes} ${docente.apm_docentes}`}>
+                    {docente.nombre_docentes} {docente.app_docentes} {docente.apm_docentes}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Grado:
+              <select name="nombre_grado" value={selectedHorario.nombre_grado} onChange={handleInputChange}>
+                <option value="">Selecciona un grado</option>
+                {grados.map(grado => (
+                  <option key={grado.id_grado} value={grado.nombre_grado}>
+                    {grado.nombre_grado}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Grupo:
+              <select name="nombre_grupo" value={selectedHorario.nombre_grupo} onChange={handleInputChange}>
+                <option value="">Selecciona un grupo</option>
+                {grupos.map(grupo => (
+                  <option key={grupo.id_grupos} value={grupo.nombre_grupos}>
+                    {grupo.nombre_grupos}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Carrera Técnica:
+              <select name="nombre_carrera_tecnica" value={selectedHorario.nombre_carrera_tecnica} onChange={handleInputChange}>
+                <option value="">Selecciona una carrera técnica</option>
+                {carrerasTecnicas.map(carrera => (
+                  <option key={carrera.id_carrera_tecnica} value={carrera.nombre_carrera_tecnica}>
+                    {carrera.nombre_carrera_tecnica}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Ciclo Escolar:
+              <input type="text" name="ciclo_escolar" value={selectedHorario.ciclo_escolar} onChange={handleInputChange} />
+            </label>
+            {selectedHorario.dias_horarios && selectedHorario.dias_horarios.map((dia, index) => (
+              <div key={index}>
+                <label>
+                  Día:
+                  <input type="text" value={dia.day} onChange={(e) => handleDiaHorarioChange(index, 'day', e.target.value)} />
+                </label>
+                <label>
+                  Hora de Inicio:
+                  <input type="time" value={dia.startTime} onChange={(e) => handleDiaHorarioChange(index, 'startTime', e.target.value)} />
+                </label>
+                <label>
+                  Hora de Fin:
+                  <input type="time" value={dia.endTime} onChange={(e) => handleDiaHorarioChange(index, 'endTime', e.target.value)} />
+                </label>
+              </div>
+            ))}
+            <button className="save-button" type="button" onClick={handleSubmit}>Guardar Cambios</button>
+          </form>
         )}
+        <button className="close-button-schedules-view" onClick={closeModal}>Cerrar</button>
       </Modal>
 
       <ToastContainer />
