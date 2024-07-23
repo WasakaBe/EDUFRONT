@@ -1,0 +1,162 @@
+.navbar-dashboard {
+ display: flex;
+ height: 100% auto !important;
+ width: 20%;
+ background-color: #f8f9fa; 
+}
+.sidebar {
+ width: 100%;
+ background-color:  rgba(11, 52, 11, 0.742);
+ border-right: 1px solid #eaeaea;
+}
+.sidebar-header {
+ display: flex;
+ background-color: rgb(11, 52, 11);
+ align-items: center;
+ padding: 20px;
+ color: #fff;
+}
+.logo {
+ width: 40px;
+ height: 40px;
+ margin-right: 10px;
+}
+.menu {
+ list-style-type: none;
+ padding: 0;
+ margin: 0;
+}
+.menu-item {
+ padding: 10px 15px;
+ color: #fffefe;
+ cursor: pointer;
+ position: relative;
+ display: block;  /* Cambiado a flex para una mejor alineación */
+ align-items: center;
+ gap: 10px;  /* Espacio entre el icono y el texto */
+}
+.menu-item:hover {
+ background-color: #b7b7b8c1;
+}
+.menu-item img {
+ width: 40px;
+}
+.dropdown-toggle::after {
+ content: '▼'; /* Flecha indicando el dropdown */
+ font-size: 12px;
+ margin-left: 10px;
+}
+.dropdown-menu2 {
+ display: none;
+ list-style-type: none;
+ position: relative;
+ width: 100%;
+ z-index: 1000;
+}
+.dropdown-item2 {
+ padding: 10px;
+ cursor: pointer;
+ color: #000000;
+}
+.dropdown-item2 a {
+ text-decoration: none;
+ color: inherit;
+}
+.dropdown-item2:hover {
+ background-color: rgba(63, 65, 63, 0.618);
+ color: rgb(255, 254, 254);
+ border-radius: 10px;
+}
+.menu-item.dropdown:hover .dropdown-menu2 {
+ display: block;
+ position: relative;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+ .navbar-dashboard {
+   width: 25%;
+ }
+ .menu-item img {
+   width: 35px;
+ }
+ .logo {
+   width: 35px;
+   height: 35px;
+ }
+}
+
+@media (max-width: 992px) {
+ .navbar-dashboard {
+   width: 30%;
+ }
+ .menu-item img {
+   width: 30px;
+ }
+ .menu-item  {
+  width: 100%;
+  text-align: center;
+}
+ .logo {
+   width: 30px;
+   height: 30px;
+ }
+}
+
+@media (max-width: 768px) {
+ .navbar-dashboard {
+   width: 35%;
+   height: 100%;
+ }
+ .menu-item img {
+   width: 25px;
+ }
+ .logo {
+   width: 25px;
+   height: 25px;
+ }
+ .sidebar-header h3 {
+   font-size: 18px;
+ }
+ .menu-item {
+   padding: 8px 12px;
+ }
+}
+
+@media (max-width: 576px) {
+ .navbar-dashboard {
+   width: 40%;
+ }
+ .menu-item img {
+   width: 20px;
+ }
+ .logo {
+   width: 20px;
+   height: 20px;
+ }
+ .sidebar-header h3 {
+   font-size: 16px;
+ }
+ .menu-item {
+   padding: 6px 10px;
+ }
+}
+
+@media (max-width: 400px) {
+ .navbar-dashboard {
+   width: 50%;
+ }
+ .menu-item img {
+   width: 18px;
+ }
+ .logo {
+   width: 18px;
+   height: 18px;
+ }
+ .sidebar-header h3 {
+   font-size: 14px;
+ }
+ .menu-item {
+   padding: 4px 8px;
+ }
+}

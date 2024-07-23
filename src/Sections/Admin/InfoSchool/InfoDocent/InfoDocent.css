@@ -1,96 +1,177 @@
 .info-docent-container {
- width: 100%;
- margin: 0 auto;
- padding: 20px;
- background-color: #fff;
- border-radius: 8px;
- box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
- display: flex;
- flex-direction: column;
- align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .info-docent-container h2 {
- text-align: center;
- margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .search-bar {
- display: flex;
- flex-wrap: wrap;
- justify-content: center;
- margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .search-bar input {
- padding: 10px;
- border: 1px solid #ccc;
- border-radius: 5px 0 0 5px;
- width: 300px;
- max-width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+  width: 300px;
+  max-width: 80%;
 }
 
 .search-bar button {
- padding: 10px;
- border: 1px solid #ccc;
- border-left: none;
- background-color: #007bff;
- color: #fff;
- border-radius: 0 5px 5px 0;
- cursor: pointer;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 0 5px 5px 0;
 }
 
 .search-bar button:hover {
- background-color: #0056b3;
+  background-color: #45a049;
 }
 
 .docents-table-container {
- width: 100%;
- overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .docents-table {
- width: 100%;
- max-width: 1200px;
- border-collapse: collapse;
- margin-bottom: 20px;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.docents-table th,
-.docents-table td {
- padding: 10px;
- border: 1px solid #ddd;
- text-align: left;
+.docents-table th, .docents-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
 }
 
 .docents-table th {
- background-color: #f4f4f4;
+  background-color: #4caf50;
+  color: white;
+}
+
+.docents-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.docents-table tbody tr:hover {
+  background-color: #ddd;
+}
+
+.docents-table .align2 {
+  display: flex;
+  justify-content: space-around;
+}
+
+.save-button-info-docent, .update-button-info-docent, .cancel-button-info-docent {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.save-button-info-docent:hover, .update-button-info-docent:hover, .cancel-button-info-docent:hover {
+  background-color: #45a049;
 }
 
 .pagination {
- display: flex;
- justify-content: center;
- margin-top: 20px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .page-button {
- padding: 10px;
- margin: 0 5px;
- border: 1px solid #ccc;
- background-color: #f4f4f4;
- cursor: pointer;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #4caf50;
+  background-color: white;
+  cursor: pointer;
 }
 
-.page-button.active {
- background-color: #007bff;
- color: white;
+.page-button.active, .page-button:hover {
+  background-color: #4caf50;
+  color: white;
 }
 
-.page-button:hover {
- background-color: #ddd;
+.modal-info-docent {
+  width: 80%;
+  max-width: 600px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 800px) {
- .hide-on-mobile {
-   display: none;
- }}
+.modal-overlay-info-docent {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-form-info-docent {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-section-info-docent {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.register-input-container-info-docent {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  width: 48%;
+}
+
+.register-input-container-info-docent label {
+  margin-bottom: 5px;
+}
+
+.register-input-container-info-docent input, .register-input-container-info-docent select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button-group-info-docent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recaptcha-info-docent {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.previous-button-info-docent, .next-button-info-docent {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.previous-button-info-docent:hover, .next-button-info-docent:hover {
+  background-color: #45a049;
+}
