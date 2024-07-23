@@ -1,10 +1,9 @@
-import React, { useState, useContext, useRef, ChangeEvent } from 'react'
-import { FaCamera } from 'react-icons/fa'
+import React, { useState, useContext } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import './ProfileAdminDashboard.css'
-import { AuthContext, User } from '../../../Auto/Auth'
-import { apiUrl } from '../../../constants/Api'
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../../../Auto/Auth'
+import { apiUrl } from '../../../constants/Api' // Importa apiUrl
 
 const ProfileAdminDashboard: React.FC = () => {
   const authContext = useContext(AuthContext)
@@ -15,28 +14,23 @@ const ProfileAdminDashboard: React.FC = () => {
 
   const { user, login } = authContext
 
-  if (!user) {
-    throw new Error('User must be logged in')
+  const [isEditing, setIsEditing] = useState(false)
+  const [nombre, setNombre] = useState(user?.nombre_usuario || '')
+  const [app, setApp] = useState(user?.app_usuario || '')
+  const [apm, setApm] = useState(user?.apm_usuario || '')
+  const [email, setEmail] = useState(user?.correo_usuario || '')
+  const [password, setPassword] = useState(user?.pwd_usuario || '')
+  const [foto, setFoto] = useState<string | ArrayBuffer | null>(
+    user?.foto_usuario ? `data:image/jpeg;base64,${user.foto_usuario}` : ''
+  )
+
+  const handleEditClick = () => {
+    setIsEditing(!isEditing)
+    toast.info(isEditing ? 'Modo edición desactivado' : 'Modo edición activado')
   }
 
-  const [isEditing, setIsEditing] = useState(false)
-  const [formData, setFormData] = useState<User>({
-    nombre_usuario: user?.nombre_usuario || '',
-    app_usuario: user?.app_usuario || '',
-    apm_usuario: user?.apm_usuario || '',
-    phone_usuario: user?.phone_usuario || '',
-    correo_usuario: user?.correo_usuario || '',
-    pwd_usuario: user?.pwd_usuario || '',
-    foto_usuario: user?.foto_usuario || '',
-    id_usuario: user?.id_usuario || 0,
-    idRol: user?.idRol || 0,
-  })
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-
   const getInitials = (name: string): string => {
-    if (!name) {
-      return ''
-    }
+    if (!name) return ''
     const namesArray = name.trim().split(' ')
     if (namesArray.length === 1) {
       return namesArray[0].charAt(0).toUpperCase()
@@ -47,234 +41,161 @@ const ProfileAdminDashboard: React.FC = () => {
     )
   }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prevData) => ({ ...prevData, [name]: value }))
+  const handleCancel = () => {
+    setIsEditing(false)
+    setNombre(user?.nombre_usuario || '')
+    setApp(user?.app_usuario || '')
+    setApm(user?.apm_usuario || '')
+    setEmail(user?.correo_usuario || '')
+    setPassword(user?.pwd_usuario || '')
+    setFoto(
+      user?.foto_usuario ? `data:image/jpeg;base64,${user.foto_usuario}` : ''
+    )
+    toast.info('Modo edición desactivado')
   }
 
   const handleSave = async () => {
-    try {
-      if (!formData.pwd_usuario) {
-        toast.error('La contraseña no puede estar vacía')
-        return
+    if (user) {
+      const updatedUser = {
+        nombre_usuario: nombre,
+        app_usuario: app,
+        apm_usuario: apm,
+        correo_usuario: email,
+        pwd_usuario: password,
+        foto_usuario: foto ? (foto as string).split(',')[1] : '',
       }
 
-      const form = new FormData()
-      ;(Object.keys(formData) as Array<keyof User>).forEach((key) => {
-        form.append(key, formData[key]?.toString() || '')
-      })
-
-      if (
-        fileInputRef.current &&
-        fileInputRef.current.files &&
-        fileInputRef.current.files.length > 0
-      ) {
-        const file = fileInputRef.current.files[0]
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onloadend = async () => {
-          const base64String = reader.result
-            ? (reader.result as string).split(',')[1]
-            : ''
-          form.append('foto_usuario', base64String)
-
-          const response = await fetch(
-            `${apiUrl}update4-user/${user.id_usuario}`,
-            {
-              method: 'POST',
-              body: form,
-            }
-          )
-
-          if (response.ok) {
-            const updatedUser = { ...user, ...formData }
-            updatedUser.foto_usuario = `data:image/jpeg;base64,${base64String}`
-            login(updatedUser)
-            setIsEditing(false)
-            toast.success('Datos de usuario actualizados exitosamente')
-          } else {
-            const result = await response.json()
-            toast.error(result.message || 'Error al actualizar los datos')
-          }
-        }
-      } else {
+      try {
         const response = await fetch(
-          `${apiUrl}update4-user/${user.id_usuario}`,
+          `${apiUrl}update-profile/${user.id_usuario}`, // Usa apiUrl aquí
           {
-            method: 'POST',
-            body: form,
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedUser),
           }
         )
 
         if (response.ok) {
-          const updatedUser = { ...user, ...formData }
-          login(updatedUser)
+          const data = await response.json()
+          login({ ...user, ...updatedUser })
           setIsEditing(false)
-          toast.success('Datos de usuario actualizados exitosamente')
+          toast.success('Perfil actualizado con éxito')
         } else {
-          const result = await response.json()
-          toast.error(result.message || 'Error al actualizar los datos')
+          toast.error('Error al actualizar el perfil')
         }
+      } catch (error) {
+        toast.error('Error al actualizar el perfil')
       }
-    } catch (error) {
-      console.error('Error al actualizar los datos:', error)
-      toast.error('Error al actualizar los datos')
     }
   }
 
-  const toggleEditMode = () => {
-    if (!isEditing) {
-      toast.success('Modo de edición activado')
-    }
-    setIsEditing(!isEditing)
-  }
-
-  const handleCancel = () => {
-    setIsEditing(false)
-    setFormData({
-      nombre_usuario: user?.nombre_usuario || '',
-      app_usuario: user?.app_usuario || '',
-      apm_usuario: user?.apm_usuario || '',
-      phone_usuario: user?.phone_usuario || '',
-      correo_usuario: user?.correo_usuario || '',
-      pwd_usuario: user?.pwd_usuario || '',
-      foto_usuario: user?.foto_usuario || '',
-      id_usuario: user?.id_usuario || 0,
-      idRol: user?.idRol || 0,
-    })
-  }
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
       const reader = new FileReader()
-      reader.readAsDataURL(file)
       reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          foto_usuario: reader.result as string,
-        }))
+        setFoto(reader.result)
       }
+      reader.readAsDataURL(file)
     }
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        <div className="profile-header">
-          {formData.foto_usuario || user?.foto_usuario ? (
-            <img
-              src={formData.foto_usuario || user.foto_usuario}
-              alt="Profile"
-              className="profile-picture"
-            />
-          ) : (
-            <div className="profile-initials">
-              {getInitials(user?.nombre_usuario || '')}
-            </div>
-          )}
-          {isEditing && (
-            <>
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-                onChange={handleFileChange}
-                name="image"
-              />
-              <button
-                className="change-photo-button"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <FaCamera />
-              </button>
-            </>
-          )}
-        </div>
-        <div className="profile-body">
-          <h2>Mi Perfil</h2>
-          <form className="profile-form" id="profile-form">
-            <div className="form-group">
-              <label>Nombre</label>
-              <input
-                type="text"
-                name="nombre_usuario"
-                value={formData.nombre_usuario}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-            <div className="form-group">
-              <label>Apellido Paterno</label>
-              <input
-                type="text"
-                name="app_usuario"
-                value={formData.app_usuario}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-            <div className="form-group">
-              <label>Apellido Materno</label>
-              <input
-                type="text"
-                name="apm_usuario"
-                value={formData.apm_usuario}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-            <div className="form-group">
-              <label>Teléfono</label>
-              <input
-                type="text"
-                name="phone_usuario"
-                value={formData.phone_usuario}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-            <div className="form-group">
-              <label>Correo</label>
-              <input
-                type="text"
-                name="correo_usuario"
-                value={formData.correo_usuario}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-            <div className="form-group">
-              <label>Contraseña</label>
-              <input
-                type="password"
-                name="pwd_usuario"
-                value={formData.pwd_usuario}
-                onChange={handleChange}
-                placeholder="Nueva contraseña"
-                readOnly={!isEditing}
-              />
-            </div>
-          </form>
-          <div className="profile-footer">
-            {isEditing ? (
-              <>
-                <button className="save-button" onClick={handleSave}>
-                  Guardar
-                </button>
-                <button className="edit-button" onClick={handleCancel}>
-                  Cancelar
-                </button>
-              </>
-            ) : (
-              <button className="edit-button" onClick={toggleEditMode}>
-                Editar
-              </button>
-            )}
-          </div>
-        </div>
+    <div className="container-profile-admin">
+      <ToastContainer />
+      <div className="header-profile-admin">
+        <h2>{isEditing ? 'Editar Perfil' : 'Perfil'}</h2>
       </div>
-   
+      <div className="avatar-container-profile-admin">
+        <img
+          className="avatar-profile-admin"
+          src={
+            (foto as string) ||
+            'https://i.pinimg.com/564x/48/84/3b/48843b6ea8fead404661af7b00397142.jpg'
+          }
+          alt="Perfil de administrador"
+        />
+
+        {isEditing && (
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+        )}
+      </div>
+      <div className="profile-info-profile-admin">
+        {isEditing ? (
+          <>
+            <label>
+              Nombre completo
+              <input
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+              />
+            </label>
+            <label>
+              Apellido paterno
+              <input
+                type="text"
+                value={app}
+                onChange={(e) => setApp(e.target.value)}
+              />
+            </label>
+            <label>
+              Apellido materno
+              <input
+                type="text"
+                value={apm}
+                onChange={(e) => setApm(e.target.value)}
+              />
+            </label>
+            <label>
+              Correo electrónico
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+            <label>
+              Contraseña
+              <div className="password-container-profile-admin">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span className="show-password-icon-profile-admin">
+                  &#128065;
+                </span>
+              </div>
+            </label>
+            <div className="align">
+              <button onClick={handleSave} className="save-button">
+                GUARDAR
+              </button>
+              <button onClick={handleCancel} className="exit-button">
+                CANCELAR
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="credentials-view-container">
+              <h3>
+                {nombre} {app} {apm}
+              </h3>
+              <p>Correo electrónico: {email}</p>
+              <p>Contraseña: {password}</p>
+            </div>
+          </>
+        )}
+      </div>
+      {!isEditing && (
+        <button onClick={handleEditClick} className="save-button-profile-admin">
+          Actualizar
+        </button>
+      )}
     </div>
   )
 }

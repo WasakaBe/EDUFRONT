@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import './Navbar.css';
 import { logo_cbta } from '../../../assets/logos';
 import { Login } from '../../../forms';
-import { BecasModal } from '../../../components';
+import { BecasModal,ReinscriptionModal } from '../../../components';
 
 const Navbar: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showBecas, setShowBecas] = useState(false);
+  const [showReinscription, setShowReinscription] = useState(false); // Nuevo estado para Reinscripción
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -22,6 +23,14 @@ const Navbar: React.FC = () => {
 
   const handleCloseBecas = () => {
     setShowBecas(false);
+  };
+
+  const handleReinscriptionClick = () => {
+    setShowReinscription(true);
+  };
+
+  const handleCloseReinscription = () => {
+    setShowReinscription(false);
   };
 
   return (
@@ -42,7 +51,7 @@ const Navbar: React.FC = () => {
               <a href="#" className="dropdown-toggle">Servicios</a>
               <ul className="dropdown-menu">
                 <li className="dropdown-item"><a href="/#Inscripcion">Inscripción</a></li>
-                <li className="dropdown-item"><a href="/#">Reinscripción</a></li>
+                <li className="dropdown-item"><a href="#" onClick={handleReinscriptionClick}>Reinscripción</a></li> 
                 <li className="dropdown-item dropdown-submenu">
                   <a href="#">Escolares</a>
                   <ul className="dropdown-menu">
@@ -61,6 +70,7 @@ const Navbar: React.FC = () => {
       </nav>
       {showLogin && <Login onClose={handleCloseLogin} />}
       {showBecas && <BecasModal onClose={handleCloseBecas} />}
+      {showReinscription && <ReinscriptionModal onClose={handleCloseReinscription} />} 
     </>
   );
 };

@@ -73,42 +73,45 @@ const Contact: React.FC = () => {
 
   return (
     <div className="container-contact" id="Contact">
-      <h1 className="contact-title">Contactanos</h1>
+      <h1 className="contact-title">Contáctanos</h1>
       <div className="dates-contacts">
         <iframe title="Google Map" src={MAPURL} className="contact-map" />
         <form className="contact-form" onSubmit={handleSubmit}>
           <div className={`input-container ${nameValid ? 'valid' : 'invalid'}`}>
+            <label className="contact-label" htmlFor="name">Nombre</label>
             <input
               className="contact-input"
+              id="name"
               type="text"
-              placeholder=" "
+              placeholder="Nombre"
               value={name}
               onChange={handleNameChange}
               required
             />
-            <label className="contact-label">Nombre</label>
           </div>
           <div className={`input-container ${emailValid ? 'valid' : 'invalid'}`}>
+            <label className="contact-label" htmlFor="email">Correo</label>
             <input
               className="contact-input"
+              id="email"
               type="email"
-              placeholder=" "
+              placeholder="Correo"
               value={email}
               onChange={handleEmailChange}
               required
             />
-            <label className="contact-label">Correo</label>
           </div>
           <div className={`input-container ${messageValid ? 'valid' : 'invalid'}`}>
+            <label className="contact-label" htmlFor="message">Mensaje</label>
             <textarea
               className="contact-input"
+              id="message"
               rows={5}
-              placeholder=" "
+              placeholder="Mensaje"
               value={message}
               onChange={handleMessageChange}
               required
             />
-            <label className="contact-label">Mensaje</label>
           </div>
           <button className="contact-btn" type="submit">
             Enviar

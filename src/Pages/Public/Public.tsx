@@ -11,10 +11,12 @@ import {
 import Inscription from '../../Sections/Public/Inscription/Inscription'
 import InforAreas from '../../Sections/Public/InfoAreas/InforAreas'
 import Contact from '../../Sections/Public/Contact/Contact'
+import Breadcrumb from '../../constants/Breadcrumbs/Breadcrumbs'
 const Public: React.FC = () => {
   return (
     <div>
       <Navbar />
+      <Breadcrumb path="Inicio" />
       <Carrusel />
       <Welcome />
       <Cultural />

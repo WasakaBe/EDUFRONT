@@ -48,7 +48,7 @@ const Inscription: React.FC = () => {
   };
 
   return (
-    <div className="inscription-container">
+    <div className="inscription-container" id='Inscripcion'>
       <div className="inscription-text">
         <h1>REQUISITOS PARA LA INSCRIPCIÓN</h1>
         <p>{inscriptionData.txt_info_inscription}</p>

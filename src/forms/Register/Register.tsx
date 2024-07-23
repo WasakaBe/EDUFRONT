@@ -46,8 +46,7 @@ interface SexOption {
 }
 
 const Register = ({ onClose }: RegisterProps) => {
-  const [step, setStep] = useState<number>(1);
-  const [role, setRole] = useState<string>('');
+  const [step, setStep] = useState<number>(2); // Inicializar en el paso 2
   const [formData, setFormData] = useState<FormData>({
     nombre: '',
     nombreError: false,
@@ -101,11 +100,6 @@ const Register = ({ onClose }: RegisterProps) => {
     } catch (err) {
       toast.error('Error al obtener las opciones de sexo');
     }
-  };
-
-  const handleRoleSelect = (selectedRole: string) => {
-    setRole(selectedRole);
-    setStep(2);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -251,18 +245,13 @@ const Register = ({ onClose }: RegisterProps) => {
       return false;
     }
 
-    // Validar fecha de nacimiento para alumnos
+    // Validar fecha de nacimiento para familiares
     const birthDate = DateTime.fromISO(fechaNacimiento);
     const currentDate = DateTime.now();
     const age = currentDate.diff(birthDate, 'years').years;
 
-    if (role === 'Alumno') {
-      if (age < 15 || age > 19) {
-        toast.error('La edad debe estar entre 15 y 19 años para alumnos');
-        return false;
-      }
-    } else if ((role === 'Docente' || role === 'Familiar') && (age < 18 || age > 70)) {
-      toast.error('La edad debe estar entre 18 y 70 años para docentes y familiares');
+    if (age < 18 || age > 70) {
+      toast.error('La edad debe estar entre 18 y 70 años para familiares');
       return false;
     }
 
@@ -370,7 +359,7 @@ const Register = ({ onClose }: RegisterProps) => {
           correo_usuario: formData.correo,
           pwd_usuario: formData.pwd,
           phone_usuario: formData.telefono,
-          idRol: role === 'Alumno' ? 2 : role === 'Docente' ? 3 : 4, // Asumiendo que los roles son 2, 3 y 4
+          idRol: 4, // Rol de Familiar
           idSexo: formData.sexo,
           ip_usuario: await fetch('https://api64.ipify.org?format=json')
             .then(response => response.json())
@@ -396,81 +385,70 @@ const Register = ({ onClose }: RegisterProps) => {
   return (
     <div className="register-modal-overlay">
       <div className="register-modal-content">
-        {step === 1 ? (
+        {step === 2 ? (
           <>
-            <h2>Bienvenido</h2>
-            <p>Antes de avanzar, seleccione el tipo de rol que usted pertenece</p>
-            <div className="role-buttons">
-              <button className="role-button" onClick={() => handleRoleSelect('Alumno')}>Alumno</button>
-              <button className="role-button" onClick={() => handleRoleSelect('Docente')}>Docente</button>
-              <button className="role-button" onClick={() => handleRoleSelect('Familiar')}>Familiar</button>
+            <h2>Crear Cuenta - Sección 1</h2>
+            <div className="register-section">
+              <div className="register-input-container">
+                <label htmlFor="nombre">Nombre</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  placeholder="Nombre"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  className={formData.nombreError ? 'error' : formData.nombreSuccess ? 'success' : ''}
+                  required
+                />
+              </div>
+              <div className="register-input-container">
+                <label htmlFor="app">Apellido Paterno</label>
+                <input
+                  type="text"
+                  id="app"
+                  name="app"
+                  placeholder="Apellido Paterno"
+                  value={formData.app}
+                  onChange={handleChange}
+                  className={formData.appError ? 'error' : formData.appSuccess ? 'success' : ''}
+                  required
+                />
+              </div>
+              <div className="register-input-container">
+                <label htmlFor="apm">Apellido Materno</label>
+                <input
+                  type="text"
+                  id="apm"
+                  name="apm"
+                  placeholder="Apellido Materno"
+                  value={formData.apm}
+                  onChange={handleChange}
+                  className={formData.apmError ? 'error' : formData.apmSuccess ? 'success' : ''}
+                  required
+                />
+              </div>
+              <div className="register-input-container">
+                <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
+                <input
+                  type="date"
+                  id="fechaNacimiento"
+                  name="fechaNacimiento"
+                  placeholder="Fecha de Nacimiento"
+                  value={formData.fechaNacimiento}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              {error && <p className="register-error-text">{error}</p>}
+              <div className="button-group">
+                <button className="previous-button" onClick={handlePreviousStep}>Anterior</button>
+                <button className="next-button" onClick={handleNextStep}>Siguiente</button>
+              </div>
             </div>
           </>
         ) : (
           <>
-            {step === 2 && (
-              <>
-                <h2>Crear Cuenta - Sección 1</h2>
-                <div className="register-section">
-                  <div className="register-input-container">
-                    <label htmlFor="nombre">Nombre</label>
-                    <input
-                      type="text"
-                      id="nombre"
-                      name="nombre"
-                      placeholder="Nombre"
-                      value={formData.nombre}
-                      onChange={handleChange}
-                      className={formData.nombreError ? 'error' : formData.nombreSuccess ? 'success' : ''}
-                      required
-                    />
-                  </div>
-                  <div className="register-input-container">
-                    <label htmlFor="app">Apellido Paterno</label>
-                    <input
-                      type="text"
-                      id="app"
-                      name="app"
-                      placeholder="Apellido Paterno"
-                      value={formData.app}
-                      onChange={handleChange}
-                      className={formData.appError ? 'error' : formData.appSuccess ? 'success' : ''}
-                      required
-                    />
-                  </div>
-                  <div className="register-input-container">
-                    <label htmlFor="apm">Apellido Materno</label>
-                    <input
-                      type="text"
-                      id="apm"
-                      name="apm"
-                      placeholder="Apellido Materno"
-                      value={formData.apm}
-                      onChange={handleChange}
-                      className={formData.apmError ? 'error' : formData.apmSuccess ? 'success' : ''}
-                      required
-                    />
-                  </div>
-                  <div className="register-input-container">
-                    <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
-                    <input
-                      type="date"
-                      id="fechaNacimiento"
-                      name="fechaNacimiento"
-                      placeholder="Fecha de Nacimiento"
-                      value={formData.fechaNacimiento}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  {error && <p className="register-error-text">{error}</p>}
-                  <div className="button-group">
-                    <button className="previous-button" onClick={handlePreviousStep}>Anterior</button>
-                    <button className="next-button" onClick={handleNextStep}>Siguiente</button>
-                  </div>
-                </div>
-              </>
-            )}
             {step === 3 && (
               <>
                 <h2>Crear Cuenta - Sección 2</h2>
