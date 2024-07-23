@@ -1,48 +1,48 @@
-import { useState, useEffect, FormEvent } from 'react';
-import { toast } from 'react-toastify';
-import { apiUrl } from '../../constants/Api';
+import { useState, useEffect, FormEvent } from 'react'
+import { toast } from 'react-toastify'
+import { apiUrl } from '../../constants/Api'
 
 interface PasswordResetProps {
-  onClose: () => void;
+  onClose: () => void
 }
 
 interface Question {
-  id_preguntas: number;
-  nombre_preguntas: string;
+  id_preguntas: number
+  nombre_preguntas: string
 }
 
 const PasswordReset = ({ onClose }: PasswordResetProps) => {
-  const [email, setEmail] = useState<string>('');
-  const [emailError, setEmailError] = useState<string>('');
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [selectedQuestion, setSelectedQuestion] = useState<string>('');
-  const [answer, setAnswer] = useState<string>('');
-  const [token, setToken] = useState<string>('');
-  const [newPassword, setNewPassword] = useState<string>('');
-  const [repeatPassword, setRepeatPassword] = useState<string>('');
-  const [method, setMethod] = useState<string>(''); // 'question' or 'token'
-  const [step, setStep] = useState<number>(1); // 1: Email, 2: Select Method, 3: Verify, 4: Reset Password
+  const [email, setEmail] = useState<string>('')
+  const [emailError, setEmailError] = useState<string>('')
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [selectedQuestion, setSelectedQuestion] = useState<string>('')
+  const [answer, setAnswer] = useState<string>('')
+  const [token, setToken] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [repeatPassword, setRepeatPassword] = useState<string>('')
+  const [method, setMethod] = useState<string>('') // 'question' or 'token'
+  const [step, setStep] = useState<number>(1) // 1: Email, 2: Select Method, 3: Verify, 4: Reset Password
 
   useEffect(() => {
     async function fetchQuestions() {
       try {
-        const response = await fetch(`${apiUrl}pregunta`);
-        const data = await response.json();
-        setQuestions(data);
+        const response = await fetch(`${apiUrl}pregunta`)
+        const data = await response.json()
+        setQuestions(data)
       } catch (error) {
-        toast.error('Error al cargar las preguntas de seguridad');
+        toast.error('Error al cargar las preguntas de seguridad')
       }
     }
-    fetchQuestions();
-  }, []);
+    fetchQuestions()
+  }, [])
 
   const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return re.test(String(email).toLowerCase())
+  }
 
   const handleEmailSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (validateEmail(email)) {
       try {
         const response = await fetch(`${apiUrl}check-email`, {
@@ -51,26 +51,32 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ correo_usuario: email }),
-        });
-        const data = await response.json();
+        })
+        const data = await response.json()
         if (response.status === 200 && data.exists) {
-          toast.success('Correo verificado. Seleccione el método de restablecimiento de contraseña.');
-          setStep(2); // Move to select method step
-          setEmailError('');
+          toast.success(
+            'Correo verificado. Seleccione el método de restablecimiento de contraseña.'
+          )
+          setStep(2) // Move to select method step
+          setEmailError('')
         } else {
-          toast.error('El correo ingresado no se encuentra disponible o no existe');
-          setEmailError('El correo ingresado no se encuentra disponible o no existe');
+          toast.error(
+            'El correo ingresado no se encuentra disponible o no existe'
+          )
+          setEmailError(
+            'El correo ingresado no se encuentra disponible o no existe'
+          )
         }
       } catch (error) {
-        toast.error('Error al verificar el correo');
+        toast.error('Error al verificar el correo')
       }
     } else {
-      setEmailError('Por favor, ingrese un correo electrónico válido.');
+      setEmailError('Por favor, ingrese un correo electrónico válido.')
     }
-  };
+  }
 
   const handleMethodSelect = async (selectedMethod: string) => {
-    setMethod(selectedMethod);
+    setMethod(selectedMethod)
     if (selectedMethod === 'token') {
       try {
         const response = await fetch(`${apiUrl}get-token`, {
@@ -79,23 +85,23 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ correo_usuario: email }),
-        });
+        })
         if (response.status === 200) {
-          toast.success('Token enviado a su correo electrónico.');
-          setStep(3); // Move to token verification step
+          toast.success('Token enviado a su correo electrónico.')
+          setStep(3) // Move to token verification step
         } else {
-          toast.error('Error al enviar el token.');
+          toast.error('Error al enviar el token.')
         }
       } catch (error) {
-        toast.error('Error al enviar el token.');
+        toast.error('Error al enviar el token.')
       }
     } else {
-      setStep(3); // Move to question verification step
+      setStep(3) // Move to question verification step
     }
-  };
+  }
 
   const handleQuestionSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (selectedQuestion && answer) {
       try {
         const response = await fetch(`${apiUrl}recover-password`, {
@@ -103,25 +109,31 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ correo_usuario: email, idPregunta: parseInt(selectedQuestion), respuestaPregunta: answer }),
-        });
-        
+          body: JSON.stringify({
+            correo_usuario: email,
+            idPregunta: parseInt(selectedQuestion),
+            respuestaPregunta: answer,
+          }),
+        })
+
         if (response.status === 200) {
-          toast.success('Pregunta y respuesta verificadas. Puede restablecer su contraseña.');
-          setStep(4); // Move to password reset step
+          toast.success(
+            'Pregunta y respuesta verificadas. Puede restablecer su contraseña.'
+          )
+          setStep(4) // Move to password reset step
         } else {
-          toast.error('Las credenciales proporcionadas no coinciden');
+          toast.error('Las credenciales proporcionadas no coinciden')
         }
       } catch (error) {
-        toast.error('Error al verificar la respuesta');
+        toast.error('Error al verificar la respuesta')
       }
     } else {
-      toast.error('Por favor, seleccione una pregunta e ingrese la respuesta.');
+      toast.error('Por favor, seleccione una pregunta e ingrese la respuesta.')
     }
-  };
+  }
 
   const handleTokenSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const response = await fetch(`${apiUrl}verify-code`, {
         method: 'POST',
@@ -129,32 +141,34 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ token_usuario: token }),
-      });
+      })
       if (response.status === 200) {
-        toast.success('Token verificado. Puede restablecer su contraseña.');
-        setStep(4); // Move to password reset step
+        toast.success('Token verificado. Puede restablecer su contraseña.')
+        setStep(4) // Move to password reset step
       } else {
-        toast.error('Token incorrecto');
+        toast.error('Token incorrecto')
       }
     } catch (error) {
-      toast.error('Error al verificar el token');
+      toast.error('Error al verificar el token')
     }
-  };
+  }
 
   const validatePassword = (password: string) => {
-    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
-    return re.test(password);
-  };
+    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/
+    return re.test(password)
+  }
 
   const handlePasswordReset = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!validatePassword(newPassword)) {
-      toast.error('La contraseña debe tener al menos 8 caracteres e incluir mayúsculas, minúsculas, números y caracteres especiales.');
-      return;
+      toast.error(
+        'La contraseña debe tener al menos 8 caracteres e incluir mayúsculas, minúsculas, números y caracteres especiales.'
+      )
+      return
     }
     if (newPassword !== repeatPassword) {
-      toast.error('Las contraseñas no coinciden.');
-      return;
+      toast.error('Las contraseñas no coinciden.')
+      return
     }
     try {
       const response = await fetch(`${apiUrl}updates-password`, {
@@ -162,18 +176,21 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ correo_usuario: email, new_password: newPassword }),
-      });
+        body: JSON.stringify({
+          correo_usuario: email,
+          new_password: newPassword,
+        }),
+      })
       if (response.status === 200) {
-        toast.success('Contraseña restablecida correctamente.');
-        onClose();
+        toast.success('Contraseña restablecida correctamente.')
+        onClose()
       } else {
-        toast.error('Error al restablecer la contraseña.');
+        toast.error('Error al restablecer la contraseña.')
       }
     } catch (error) {
-      toast.error('Error al restablecer la contraseña.');
+      toast.error('Error al restablecer la contraseña.')
     }
-  };
+  }
 
   return (
     <div className="register-modal-overlay">
@@ -194,14 +211,26 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
               />
               {emailError && <p className="error-text">{emailError}</p>}
               <br />
-              <button type="submit" className="login-button">Siguiente</button>
+              <button type="submit" className="login-button">
+                Siguiente
+              </button>
             </div>
           </form>
         )}
         {step === 2 && (
           <div className="buttons">
-            <button onClick={() => handleMethodSelect('question')} className="login-button">Pregunta de Seguridad</button>
-            <button onClick={() => handleMethodSelect('token')} className="login-button">Token de Correo</button>
+            <button
+              onClick={() => handleMethodSelect('question')}
+              className="login-button"
+            >
+              Pregunta de Seguridad
+            </button>
+            <button
+              onClick={() => handleMethodSelect('token')}
+              className="login-button"
+            >
+              Token de Correo
+            </button>
           </div>
         )}
         {step === 3 && method === 'question' && (
@@ -216,7 +245,10 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
               >
                 <option value="">Seleccione una pregunta</option>
                 {questions.map((question) => (
-                  <option key={question.id_preguntas} value={question.id_preguntas}>
+                  <option
+                    key={question.id_preguntas}
+                    value={question.id_preguntas}
+                  >
                     {question.nombre_preguntas}
                   </option>
                 ))}
@@ -231,7 +263,9 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
                 required
               />
               <br />
-              <button type="submit" className="login-button">Verificar</button>
+              <button type="submit" className="login-button">
+                Verificar
+              </button>
             </div>
           </form>
         )}
@@ -248,7 +282,9 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
                 required
               />
               <br />
-              <button type="submit" className="next-button">Verificar Token</button>
+              <button type="submit" className="next-button">
+                Verificar Token
+              </button>
             </div>
           </form>
         )}
@@ -274,14 +310,18 @@ const PasswordReset = ({ onClose }: PasswordResetProps) => {
                 required
               />
               <br />
-              <button type="submit" className="login-button">Restablecer Contraseña</button>
+              <button type="submit" className="login-button">
+                Restablecer Contraseña
+              </button>
             </div>
           </form>
         )}
-        <button onClick={onClose} className="close-button-login">Cerrar</button>
+        <button onClick={onClose} className="close-button-login">
+          Cerrar
+        </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default PasswordReset;
+export default PasswordReset

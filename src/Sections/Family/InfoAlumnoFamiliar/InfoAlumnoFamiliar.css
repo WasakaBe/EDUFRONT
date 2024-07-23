@@ -1,0 +1,289 @@
+.info-alumno-familiar-container {
+ padding: 20px;
+ max-width: 800px;
+ margin: 0 auto;
+}
+
+.info-alumno-familiar-title {
+ font-size: 24px;
+ margin-bottom: 20px;
+ text-align: center;
+}
+
+.info-alumno-familiar-form {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+}
+
+.info-alumno-familiar-label {
+ font-weight: bold;
+}
+
+.info-alumno-familiar-input {
+ padding: 10px;
+ font-size: 16px;
+ border-radius: 5px;
+ border: 1px solid #ccc;
+}
+
+.info-alumno-familiar-button {
+ padding: 10px;
+ font-size: 16px;
+ background-color: #28a745;
+ color: #fff;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ margin-top: 10px;
+}
+
+.info-alumno-familiar-button:hover {
+ background-color: #218838;
+}
+
+.info-alumno-familiar-error {
+ color: red;
+ margin-top: 10px;
+}
+
+.info-alumno-familiar-modal {
+ background: white;
+ padding: 20px;
+ max-width: 600px;
+ margin: auto;
+ border-radius: 8px;
+ outline: none;
+}
+
+.info-alumno-familiar-overlay {
+ background: rgba(0, 0, 0, 0.75);
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+.info-alumno-familiar-info {
+ margin-top: 20px;
+}
+
+.info-alumno-familiar-info-title {
+ font-size: 20px;
+ margin-bottom: 10px;
+}
+
+.info-alumno-familiar-info-detail {
+ margin: 5px 0;
+}
+
+.info-alumno-familiar-foto {
+ width: 100px;
+ height: 100px;
+ border-radius: 50%;
+ margin-top: 10px;
+}
+
+.info-alumno-familiar-buttons {
+ display: flex;
+ justify-content: space-between;
+ margin-top: 10px;
+}
+
+.info-alumno-familiar-add-button,
+.info-alumno-familiar-cancel-button {
+ padding: 10px;
+ font-size: 16px;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+}
+
+.info-alumno-familiar-add-button {
+ background-color: #28a745;
+ color: #fff;
+}
+
+.info-alumno-familiar-add-button:hover {
+ background-color: #218838;
+}
+
+.info-alumno-familiar-cancel-button {
+ background-color: #dc3545;
+ color: #fff;
+}
+
+.info-alumno-familiar-cancel-button:hover {
+ background-color: #c82333;
+}
+
+.info-alumno-familiar-card {
+ background: #f9f9f9;
+ border-radius: 10px;
+ padding: 20px;
+ width: 100%;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ margin-top: 20px;
+}
+
+.info-alumno-familiar-header {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ margin-bottom: 20px;
+}
+
+.info-alumno-familiar-details {
+ text-align: left;
+}
+
+.info-alumno-familiar-info-detail strong {
+ font-weight: bold;
+}
+
+.align2 {
+ display: flex;
+ justify-content: space-around;
+ margin-top: 10px;
+}
+
+.save-button,
+.info-button {
+ padding: 10px;
+ font-size: 16px;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+}
+
+.save-button {
+ background-color: #28a745;
+ color: #fff;
+}
+
+.save-button:hover {
+ background-color: #218838;
+}
+
+.info-button {
+ background-color: #007bff;
+ color: #fff;
+}
+
+.info-button:hover {
+ background-color: #0056b3;
+}
+
+.credential-container {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ margin-top: 20px;
+}
+
+.credential-card {
+ width: 300px;
+ border-radius: 15px;
+ overflow: hidden;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+ background-color: white;
+}
+
+.header {
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+ padding: 15px;
+ gap: 10px;
+}
+
+.cbta-logo,
+.sep-logo {
+ height: 50px;
+}
+
+.body-credencial {
+ padding: 2px;
+ background: linear-gradient(to bottom, #ffffff 25%, #66ccff 100%);
+}
+
+.photo-section {
+ display: flex;
+ gap: 10px;
+}
+
+.student-photo {
+ width: 100px;
+ height: 150px;
+ border-radius: 10px;
+}
+
+.name-logo-credential {
+ display: flex;
+ flex-direction: column;
+ padding: 10px;
+ justify-content: center;
+ align-items: center;
+}
+
+.student-name {
+ margin: 10px 0;
+ font-size: 25px;
+ font-weight: bold;
+}
+
+.info-section {
+ text-align: left;
+ margin: 10px 0;
+}
+
+.info-section h3 {
+ font-size: 16px;
+ font-weight: bold;
+ margin-bottom: 5px;
+ text-align: center;
+}
+
+.info-section p {
+ margin: 5px 0;
+ font-size: 14px;
+ padding: 3px;
+}
+
+.info-section p:nth-last-child(4) {
+ text-align: center;
+}
+
+.career-logo {
+ width: 60px;
+ height: 60px;
+ background-color: white;
+ border-radius: 50%;
+}
+
+.modal-view {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+}
+
+.info-alumno-familiar-close-button {
+ padding: 10px;
+ font-size: 16px;
+ border: none;
+ border-radius: 5px;
+ background-color: #dc3545;
+ color: #fff;
+ cursor: pointer;
+ margin-bottom: 10px;
+}
+
+.info-alumno-familiar-close-button:hover {
+ background-color: #c82333;
+}
+

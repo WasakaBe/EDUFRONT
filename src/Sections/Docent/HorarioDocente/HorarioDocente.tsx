@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../../Auto/Auth';
 import { apiUrl } from '../../../constants/Api';
 import Modal from 'react-modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './HorarioDocente.css';
 
 interface Horario {
@@ -32,6 +34,8 @@ const HorarioDocente: React.FC = () => {
   const [selectedHorario, setSelectedHorario] = useState<Horario | null>(null);
   const [alumnos, setAlumnos] = useState<Alumno[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [nocontrolAlumno, setNocontrolAlumno] = useState('');
 
   useEffect(() => {
     const fetchHorarios = async () => {
@@ -76,6 +80,44 @@ const HorarioDocente: React.FC = () => {
     setAlumnos([]);
   };
 
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+    setNocontrolAlumno('');
+  };
+
+  const handleAddAlumno = async () => {
+    if (!nocontrolAlumno) {
+      toast.error('Por favor, ingrese el número de control del alumno.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}horarios_escolares/${selectedHorario?.id_horario}/agregar_alumno`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nocontrol_alumno: nocontrolAlumno }),
+      });
+
+      if (response.ok) {
+        const newAlumno = await response.json();
+        setAlumnos((prevAlumnos) => [...prevAlumnos, newAlumno]);
+        toast.success('Alumno agregado exitosamente.');
+        closeAddModal();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || 'Error al agregar el alumno.');
+      }
+    } catch (error) {
+      toast.error('Error al agregar el alumno.');
+    }
+  };
+
   if (loading) {
     return <p className="loading-message">Cargando horarios del docente...</p>;
   }
@@ -86,6 +128,7 @@ const HorarioDocente: React.FC = () => {
 
   return (
     <div className="horario-docente-container">
+      <ToastContainer />
       <h2>Horarios Escolares</h2>
       <table className="horarios-table">
         <thead>
@@ -153,7 +196,26 @@ const HorarioDocente: React.FC = () => {
         ) : (
           <p>No hay alumnos por el momento</p>
         )}
-        <button className='save-button' type='button'>Agregar Alumno</button>
+        <button className='save-button' type='button' onClick={openAddModal}>Agregar Alumno</button>
+      </Modal>
+
+      <Modal
+        isOpen={isAddModalOpen}
+        onRequestClose={closeAddModal}
+        className="modal-add-alumno"
+        overlayClassName="modal-overlay-horarios"
+      >
+        <h2>Agregar Alumno</h2>
+        <div className="add-alumno-form">
+          <label htmlFor="nocontrol">Ingrese el número de control del alumno</label>
+          <input
+            type="number"
+            id="nocontrol"
+            value={nocontrolAlumno}
+            onChange={(e) => setNocontrolAlumno(e.target.value)}
+          />
+          <button className='save-button' type='button' onClick={handleAddAlumno}>Agregar</button>
+        </div>
       </Modal>
     </div>
   );

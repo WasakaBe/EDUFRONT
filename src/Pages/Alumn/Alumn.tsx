@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../Auto/Auth';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { AlumnDashboard, CredentialsAlumn, Escolar, NavbarDashboardAlumn, ProfileAlumnDashboard, SolicitarCredencialAlumno } from '../../Sections/Alumn';
+import { AlumnDashboard, CredentialsAlumn, Escolar, HorarioEscolarAlumnoPropio, NavbarDashboardAlumn, ProfileAlumnDashboard, SolicitarCredencialAlumno } from '../../Sections/Alumn';
 
 
 const Alumn: React.FC = () => {
@@ -30,6 +30,7 @@ const Alumn: React.FC = () => {
       {currentPanel === 'escolar' && <Escolar />}
       {currentPanel === 'credencialalumno' && <CredentialsAlumn />}
       {currentPanel === 'solicitarcredencialalumno' && <SolicitarCredencialAlumno />}
+      {currentPanel === 'HorarioEscolarAlumnoPropio' && <HorarioEscolarAlumnoPropio />}
     </div>
   );
 };
