@@ -18,12 +18,19 @@ interface Credencial {
   idalumnocrede: string;
 }
 
+interface Grupo {
+  id_grupos: string;
+  nombre_grupos: string;
+}
+
 export default function CredentialsView() {
   const [credenciales, setCredenciales] = useState<Credencial[]>([]);
   const [selectedCredencial, setSelectedCredencial] = useState<Credencial | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [grupos, setGrupos] = useState<Grupo[]>([]);
 
   useEffect(() => {
     const fetchCredenciales = async () => {
@@ -39,7 +46,21 @@ export default function CredentialsView() {
       }
     };
 
+    const fetchGrupos = async () => {
+      try {
+        const response = await fetch(`${apiUrl}grupo`);
+        if (!response.ok) {
+          throw new Error('Error al obtener los grupos');
+        }
+        const data: Grupo[] = await response.json();
+        setGrupos(data);
+      } catch (error) {
+        setError((error as Error).message);
+      }
+    };
+
     fetchCredenciales();
+    fetchGrupos();
   }, []);
 
   const handleViewMore = (credencial: Credencial) => {
@@ -52,8 +73,15 @@ export default function CredentialsView() {
     setIsEditing(true);
   };
 
+  const handleDelete = (credencial: Credencial) => {
+    setSelectedCredencial(credencial);
+    setIsDeleting(true);
+  };
+
   const handleCloseModal = () => {
     setSelectedCredencial(null);
+    setIsEditing(false);
+    setIsDeleting(false);
     setError(null);
     setSuccess(null);
   };
@@ -92,7 +120,34 @@ export default function CredentialsView() {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleDeleteConfirm = async () => {
+    if (selectedCredencial) {
+      try {
+        const response = await fetch(`${apiUrl}credencial_escolar/delete/${selectedCredencial.id_credencial_escolar}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText);
+        }
+
+        setCredenciales((prevCredenciales) =>
+          prevCredenciales.filter((credencial) => credencial.id_credencial_escolar !== selectedCredencial.id_credencial_escolar)
+        );
+
+        setSuccess('Credencial escolar eliminada exitosamente');
+        toast.success('Credencial escolar eliminada exitosamente');
+        handleCloseModal();
+      } catch (error) {
+        setError((error as Error).message);
+        setSuccess(null);
+        toast.error('Error al eliminar la credencial escolar');
+      }
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     if (selectedCredencial) {
       setSelectedCredencial({ ...selectedCredencial, [name]: value });
@@ -124,7 +179,7 @@ export default function CredentialsView() {
               <td>{credencial.app_credencial_escolar}</td>
               <td>{credencial.apm_credencial_escolar}</td>
               <td>{credencial.carrera_credencial_escolar}</td>
-              <td className='aligns'>
+              <td className='align'>
                 <button 
                   className='save-button' 
                   type='button'
@@ -132,7 +187,8 @@ export default function CredentialsView() {
                 >
                   Ver más
                 </button>
-                <button className='edit-button' type='button' onClick={() => handleEdit(credencial)}>Editar</button>
+                <button className='exit-button' type='button' onClick={() => handleEdit(credencial)}>Editar</button>
+                <button className='delete-button' type='button' onClick={() => handleDelete(credencial)}>Eliminar</button>
               </td>
             </tr>
           ))}
@@ -175,7 +231,18 @@ export default function CredentialsView() {
                   </div>
                   <div className="modal-body-field">
                     <strong>Grupo:</strong>
-                    <input type="text" name="grupo_credencial_escolar" value={selectedCredencial.grupo_credencial_escolar} onChange={handleChange} />
+                    <select
+                      name="grupo_credencial_escolar"
+                      value={selectedCredencial.grupo_credencial_escolar}
+                      onChange={handleChange}
+                    >
+                      <option value="">Selecciona un grupo</option>
+                      {grupos.map((grupo) => (
+                        <option key={grupo.id_grupos} value={grupo.id_grupos}>
+                          {grupo.nombre_grupos}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="modal-body-field">
                     <strong>CURP:</strong>
@@ -201,6 +268,16 @@ export default function CredentialsView() {
                 <p><strong>Seguro Social:</strong> {selectedCredencial.segsocial_credencial_escolar}</p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {isDeleting && selectedCredencial && (
+        <div className="modal-confirmation">
+          <div className="modal-content-confirmation">
+            <span className="close-button-confirmation" onClick={handleCloseModal}>&times;</span>
+            <p>¿Desea eliminar esta credencial del alumno {selectedCredencial.nombre_credencial_escolar}?</p>
+            <button className="confirm-button" type="button" onClick={handleDeleteConfirm}>Eliminar</button>
+            <button className="info-button" type="button" onClick={handleCloseModal}>Cancelar</button>
           </div>
         </div>
       )}

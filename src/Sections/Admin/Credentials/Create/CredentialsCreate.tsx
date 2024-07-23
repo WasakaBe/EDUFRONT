@@ -94,7 +94,10 @@ export default function CredentialsCreateCustom() {
           throw new Error('Error al agregar la credencial escolar')
         }
 
+        // Limpiar el estado y reiniciar el campo de entrada
         setSuccess('Credencial escolar agregada exitosamente')
+        setAlumno(null)
+        setControlNumber('')
         setError(null)
         toast.success('Credencial escolar agregada exitosamente')
       } catch (error) {
@@ -132,6 +135,8 @@ export default function CredentialsCreateCustom() {
           onChange={handleInputChange}
         />
         <button type="submit">Buscar</button>
+        <br />
+        <br />
       </form>
       {alumno && (
         <div>
@@ -192,8 +197,23 @@ export default function CredentialsCreateCustom() {
               </div>
             </div>
           </div>
-          <button className='exit-button' type='button' onClick={handleCancel}>Cancelar</button>
-          <button className='save-button' type='button' onClick={handleAddCredencial}>Agregar</button>
+          <br />
+          <div className="align">
+            <button
+              className="exit-button"
+              type="button"
+              onClick={handleCancel}
+            >
+              Cancelar
+            </button>
+            <button
+              className="save-button"
+              type="button"
+              onClick={handleAddCredencial}
+            >
+              Agregar
+            </button>
+          </div>
         </div>
       )}
     </div>
