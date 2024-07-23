@@ -1,0 +1,123 @@
+.schedule-create-container {
+ width: 100%;
+ padding: 20px;
+}
+
+.schedule-create-container h2 {
+ text-align: center;
+ margin-bottom: 20px;
+}
+
+.schedule-form {
+ display: grid;
+ grid-template-columns: repeat(4, 1fr);
+ gap: 10px;
+}
+
+.form-group {
+ display: flex;
+ flex-direction: column;
+}
+
+.form-group label {
+ margin-bottom: 5px;
+ font-weight: bold;
+}
+
+.form-group select,
+.form-group input {
+ padding: 10px;
+ border: 1px solid #ccc;
+ border-radius: 5px;
+}
+
+.add-button {
+ background-color: #28a745;
+ color: #fff;
+ padding: 10px;
+ width: 50%;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ grid-column: span 2;
+}
+
+.add-button:hover {
+ background-color: #218838;
+}
+
+.submit-button {
+ background-color: #007bff;
+ color: #fff;
+ padding: 10px;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ grid-column: span 4;
+ display: block;
+ width: 20%;
+}
+
+.submit-button:hover {
+ background-color: #0069d9;
+}
+
+.schedule-days-list {
+ list-style-type: none;
+ padding: 0;
+ margin-top: 20px;
+ grid-column: span 4;
+}
+
+.schedule-days-list li {
+ background-color: #f8f9fa;
+ padding: 10px;
+ border-radius: 5px;
+ margin-bottom: 10px;
+}
+
+@media (max-width: 1200px) {
+ .schedule-form {
+   grid-template-columns: repeat(3, 1fr);
+ }
+
+ .add-button,
+ .submit-button {
+   grid-column: span 3;
+ }
+
+ .submit-button {
+   width: 40%;
+ }
+}
+
+@media (max-width: 992px) {
+ .schedule-form {
+   grid-template-columns: repeat(2, 1fr);
+ }
+
+ .add-button,
+ .submit-button {
+   grid-column: span 2;
+ }
+
+ .submit-button {
+   width: 50%;
+ }
+}
+
+@media (max-width: 768px) {
+ .schedule-form {
+   grid-template-columns: 1fr;
+ }
+
+ .add-button,
+ .submit-button {
+   grid-column: span 1;
+   width: 100%;
+ }
+
+ .submit-button {
+   width: 100%;
+ }
+}

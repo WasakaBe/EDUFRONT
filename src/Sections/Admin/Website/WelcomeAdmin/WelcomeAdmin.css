@@ -1,0 +1,52 @@
+.welcome-admin-container {
+ width: 100%;
+ padding: 20px;
+}
+
+.welcome-admin-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin-bottom: 20px;
+}
+
+.welcome-admin-table th, .welcome-admin-table td {
+ border: 1px solid #ddd;
+ padding: 8px;
+ text-align: left;
+}
+
+.welcome-admin-table th {
+ background-color: #f2f2f2;
+ color: black;
+}
+
+.welcome-admin-table tr:hover {
+ background-color: #f1f1f1;
+}
+
+.welcome-admin-image {
+ max-width: 100px;
+ display: block;
+}
+
+.add-welcome-admin-form{
+ margin-bottom: 20px;
+}
+
+.add-welcome-admin-form input{
+ display: block;
+ margin-bottom: 10px;
+}
+
+.add-welcome-admin-form button {
+ display: block;
+ padding: 10px;
+ background-color: #4CAF50;
+ color: white;
+ border: none;
+ cursor: pointer;
+}
+
+.add-welcome-admin-form button:hover {
+ background-color: #45a049;
+}

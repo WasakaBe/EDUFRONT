@@ -1,0 +1,82 @@
+.escolar-container-view {
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+}
+
+.escolar-container {
+ padding: 20px;
+ max-width: 500px;
+ width: 100%;
+ margin: auto;
+}
+
+.escolar-container h2 {
+ text-align: center;
+ margin-bottom: 20px;
+}
+
+.section {
+ margin-bottom: 20px;
+ padding: 15px;
+ background-color: #fff;
+ border-radius: 8px;
+ box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+ transition: all 0.3s ease-in-out;
+}
+
+.section h3 {
+ margin-top: 0;
+ color: #333;
+ border-bottom: 1px solid #ddd;
+ padding-bottom: 10px;
+}
+
+.section p {
+ margin: 5px 0;
+ font-size: 16px;
+ color: #555;
+}
+
+.section p strong {
+ color: #000;
+}
+
+.btn {
+ margin-top: 15px;
+ padding: 10px 20px;
+ font-size: 16px;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+ background-color: #007bff;
+ color: white;
+}
+
+.btn-primary:hover {
+ background-color: #0056b3;
+}
+
+.btn-secondary {
+ background-color: #6c757d;
+ color: white;
+}
+
+.btn-secondary:hover {
+ background-color: #5a6268;
+}
+
+.error-message {
+ color: red;
+ text-align: center;
+}
+
+.loading-message {
+ text-align: center;
+}

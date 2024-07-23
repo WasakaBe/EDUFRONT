@@ -1,0 +1,101 @@
+.schedules-view-container {
+ width: 100%;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 20px;
+ background-color: #f9f9f9;
+}
+
+.schedules-view-container h2 {
+ margin-bottom: 20px;
+}
+
+.schedules-table {
+ width: 90%;
+ border-collapse: collapse;
+ margin-bottom: 20px;
+}
+
+.schedules-table th,
+.schedules-table td {
+ border: 1px solid #ddd;
+ padding: 8px;
+ text-align: center;
+}
+
+.schedules-table th {
+ background-color: #f2f2f2;
+}
+
+.pagination {
+ display: flex;
+ justify-content: center;
+ margin-top: 20px;
+}
+
+.page-button {
+ background-color: #136472;
+ color: white;
+ border: none;
+ padding: 10px;
+ margin: 0 5px;
+ cursor: pointer;
+ border-radius: 5px;
+}
+
+.page-button.active {
+ background-color: #0e4a57;
+}
+
+.page-button:hover {
+ background-color: #0e4a57;
+}
+
+.modal2 {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background-color: rgba(0, 0, 0, 0.5);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+
+
+.modal-content2 {
+ background-color: #fff;
+ padding: 20px;
+ border-radius: 10px;
+ width: 600px;
+ text-align: center;
+}
+
+.alumnos-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin-bottom: 20px;
+}
+
+.alumnos-table th,
+.alumnos-table td {
+ border: 1px solid #ddd;
+ padding: 8px;
+ text-align: center;
+}
+
+.alumnos-table th {
+ background-color: #f2f2f2;
+}
+
+.add-button {
+ background-color: #5cb85c;
+ color: white;
+ border: none;
+ padding: 10px;
+ cursor: pointer;
+ border-radius: 5px;
+ margin-top: 20px;
+}

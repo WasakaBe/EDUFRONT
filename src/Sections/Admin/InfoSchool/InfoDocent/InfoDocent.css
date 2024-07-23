@@ -1,0 +1,96 @@
+.info-docent-container {
+ width: 100%;
+ margin: 0 auto;
+ padding: 20px;
+ background-color: #fff;
+ border-radius: 8px;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.info-docent-container h2 {
+ text-align: center;
+ margin-bottom: 20px;
+}
+
+.search-bar {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: center;
+ margin-bottom: 20px;
+}
+
+.search-bar input {
+ padding: 10px;
+ border: 1px solid #ccc;
+ border-radius: 5px 0 0 5px;
+ width: 300px;
+ max-width: 100%;
+}
+
+.search-bar button {
+ padding: 10px;
+ border: 1px solid #ccc;
+ border-left: none;
+ background-color: #007bff;
+ color: #fff;
+ border-radius: 0 5px 5px 0;
+ cursor: pointer;
+}
+
+.search-bar button:hover {
+ background-color: #0056b3;
+}
+
+.docents-table-container {
+ width: 100%;
+ overflow-x: auto;
+}
+
+.docents-table {
+ width: 100%;
+ max-width: 1200px;
+ border-collapse: collapse;
+ margin-bottom: 20px;
+}
+
+.docents-table th,
+.docents-table td {
+ padding: 10px;
+ border: 1px solid #ddd;
+ text-align: left;
+}
+
+.docents-table th {
+ background-color: #f4f4f4;
+}
+
+.pagination {
+ display: flex;
+ justify-content: center;
+ margin-top: 20px;
+}
+
+.page-button {
+ padding: 10px;
+ margin: 0 5px;
+ border: 1px solid #ccc;
+ background-color: #f4f4f4;
+ cursor: pointer;
+}
+
+.page-button.active {
+ background-color: #007bff;
+ color: white;
+}
+
+.page-button:hover {
+ background-color: #ddd;
+}
+
+@media (max-width: 800px) {
+ .hide-on-mobile {
+   display: none;
+ }}
